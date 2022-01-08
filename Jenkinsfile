@@ -42,7 +42,8 @@ pipeline {
         stage('Unit Tests') {
           steps {
             container('maven') {
-              sh './mvnw test'
+              echo "Static Analysis Unit Tests"
+              // sh './mvnw test'
             }
           }
         }

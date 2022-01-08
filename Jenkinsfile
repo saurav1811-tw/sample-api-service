@@ -42,15 +42,23 @@ pipeline {
         stage('Unit Tests') {
           steps {
             container('maven') {
-              echo "Static Analysis Unit Tests"
-              // sh './mvnw test'
+              catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                sh './mvnw test'
+              }
             }
           }
         }
         stage('OSS Checks') {
           steps {
-            container('maven') {
-              sh './mvnw org.owasp:dependency-check-maven:check'
+              container('maven') {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                  sh './mvnw org.owasp:dependency-check-maven:check'
+              }
+            }
+          }
+          post{
+            always{
+              dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
             }
           }
         }

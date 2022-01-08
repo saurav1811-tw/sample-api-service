@@ -9,6 +9,7 @@ pipeline {
   environment {
     APP_NAME = "sample-api-service"
     IMAGE_REGISTRY = "rmkanda"
+    GIT_URL = "https://github.com/saurav1811-tw/sample-api-service.git"
   }
   stages {
     stage('Setup') {
@@ -17,6 +18,13 @@ pipeline {
           steps {
             container('maven') {
               sh './mvnw install -DskipTests -Dspotbugs.skip=true -Ddependency-check.skip=true'
+            }
+          }
+        }
+        stage('Secrets Scanner') {
+          steps {
+            container('trufflehog') {
+              sh 'trufflehog ${GIT_URL}'
             }
           }
         }

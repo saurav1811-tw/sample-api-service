@@ -21,7 +21,7 @@ pipeline {
             }
           }
         }
-        stage('Secrets Scanner') {
+        stage('Secrets Scan') {
           steps {
             container('trufflehog') {
               sh 'trufflehog --exclude_paths PREREQUISITE.md ${GIT_URL}'

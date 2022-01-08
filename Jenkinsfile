@@ -24,7 +24,7 @@ pipeline {
         stage('Secrets Scan') {
           steps {
             container('trufflehog') {
-              sh 'trufflehog --exclude_paths exclude-patterns.txt ${GIT_URL}'
+              sh 'trufflehog --exclude_paths secrets-exclude.txt ${GIT_URL}'
             }
           }
         }
@@ -42,9 +42,7 @@ pipeline {
         stage('Unit Tests') {
           steps {
             container('maven') {
-              catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                sh './mvnw test'
-              }
+              sh './mvnw test'
             }
           }
         }

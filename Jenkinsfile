@@ -69,7 +69,7 @@ pipeline {
         }
       }
     }
-    stage('Artifact Analysis') {
+    stage('Container Scans') {
       parallel {
         stage('grype container scan') {
           steps {

@@ -47,8 +47,7 @@ pipeline {
             }
           }
         }
-      }
-      stage('OSS Checks') {
+        stage('OSS Checks') {
           steps {
             container('maven') {
               sh './mvnw org.owasp:dependency-check-maven:check'
@@ -56,7 +55,7 @@ pipeline {
           }
         }
       }
-    }
+      }
     stage('Package') {
       steps {
         container('docker-tools') {

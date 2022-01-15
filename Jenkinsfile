@@ -60,8 +60,36 @@ pipeline {
             }
           }
         }
+        stage('License Checker') {
+          steps {
+            container('licensefinder') {
+              catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                sh '''#!/bin/bash --login
+                    /bin/bash --login
+                    rvm use default
+                    gem install license_finder
+                    license_finder
+                  '''
+              }
+            }
+          }
+        }
+        stage('SAST') {
+          steps {
+            container('maven') {
+              catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                sh './mvnw compile spotbugs:check'
+              }
+            }
+          }
+          post {
+            always {
+              recordIssues enabledForFailure: true, tool: spotBugs() 
+            }
+          }
+        }
       }
-      }
+    }
     stage('Package') {
       steps {
         container('docker-tools') {

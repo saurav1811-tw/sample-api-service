@@ -97,19 +97,26 @@ pipeline {
         }
       }
     }
-    stage('Container Scans') {
+    stage('Infra Scans') {
       parallel {
-        stage('grype container scan') {
+        stage('grype Container Scan') {
           steps {
             container('docker-tools') {
               sh "grype ${APP_NAME}"
             }
           }
         }
-        stage('dockle container scan') {
+        stage('dockle Container Scan') {
           steps {
             container('docker-tools') {
               sh "dockle ${APP_NAME}"
+            }
+          }
+        }
+        stage('Kubesec Kubernetes YAML Scan') {
+          steps {
+            container('docker-tools') {
+              sh "kubesec scan k8s.yaml || exit 0"
             }
           }
         }
